@@ -1,24 +1,15 @@
-import sqlite3
-class University():
-    def __init__(self, dbname="university.db"):
-        self.dbname = dbname
+from fastapi import FastAPI
+import uvicorn
+app = FastAPI()
 
-        with sqlite3.connect(self.dbname) as con:
-            cur = con.cursor()
-            cur.execute("""CREATE TABLE IF NOT EXISTS university(
-                id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, password TEXT)""")
-            con.commit()
+@app.get("/")
+async def root():
+	return {"message": "Hello World"}
 
-    def insert(self, id:int, name:str, password:int):
-        with sqlite3.connect(self.dbname) as con:
-            cur = con.cursor()
-            cur.execute("INSERT INTO university(name,password) VALUES (?, ?);",
-                        (name,password))
-            con.commit()
+@app.post("/users/{users}")
+async def read_users(id:int,users_name:str,password:str,chats):
+	return {"user_name": "Hello World"}
 
-    def read(self):
-        with sqlite3.connect(self.dbname) as con:
-            cur = con.cursor()
-            cur.execute("SELECT * FROM university")
-            return cur.fetchall()
 
+
+uvicorn.run(app, host="127.0.0.1", port=8080)
