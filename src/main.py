@@ -2,9 +2,11 @@ from fastapi import FastAPI
 import uvicorn
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
+from db import Users
+
 
 app = FastAPI()
-
+Users_db = Users()
 
 app.add_middleware(
     CORSMiddleware,
@@ -25,8 +27,12 @@ async def root():
 @app.post("/users")
 async def register_user(user_data: UserRegistration):
     print(f"Получены данные: имя={user_data.name}, пароль={user_data.password}")
+    Users_db.insert(user_data.name,user_data.password)
+    print(Users_db.read())
+    
+    return {"messege":"данные успешно"}
     
 
 
-
-uvicorn.run(app, host="127.0.0.1", port=8080)
+if __name__ == "__main__":
+    uvicorn.run(app, host="127.0.0.1", port=8080)

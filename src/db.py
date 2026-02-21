@@ -6,16 +6,16 @@ class Users():
         with sqlite3.connect(self.dbname) as con:
             cur = con.cursor()
             cur.execute("""CREATE TABLE IF NOT EXISTS users(
-                id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, password TEXT,chats TEXT)""")
+                id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, password TEXT)""")
             con.commit()
 
 
 
-    def insert(self, name:str, password:int, chats:str):
+    def insert(self, name:str, password:int):
         with sqlite3.connect(self.dbname) as con:
             cur = con.cursor()
-            cur.execute("INSERT INTO users(name,password,chats) VALUES (?, ?, ?);",
-                        (name,password,chats))
+            cur.execute("INSERT INTO users(name,password) VALUES (?, ?);",
+                        (name,password))
             con.commit()
 
     def read(self):
@@ -23,6 +23,12 @@ class Users():
             cur = con.cursor()
             cur.execute("SELECT * FROM Users")
             return cur.fetchall()
+
+
+
+
+
+
 
 
 class Chats():
@@ -78,3 +84,6 @@ class Messeges():
             cur.execute("SELECT * FROM Messeges")
             return cur.fetchall()
 
+
+if __name__ == "__main__":
+    Users_gh = Users()
