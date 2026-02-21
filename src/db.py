@@ -78,5 +78,3 @@ class Messeges():
             cur.execute("SELECT * FROM Messeges")
             return cur.fetchall()
 
-
-if __name__=="__main__":

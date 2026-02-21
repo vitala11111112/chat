@@ -2,16 +2,44 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Регистрация</title>
-
     <link rel="stylesheet" href="reg.css">
-
+    <title>Регистрация</title>
+    
 </head>
 <body>
-<div class="container">
-    <a style="font-family: Arial, sans-serif; font-size: 22px;">Регистрация</a>
-    <input type="text" >
-    <input type="text" >
-</div>
+
+
+    <div class="container">
+
+        <h2>Создать аккаунт</h2>
+
+        <form id="registrationForm" method="post">
+
+            
+            <div class="form-group">
+                <label for="name">Имя</label>
+                <input type="text" id="name" name="name" placeholder="Введите ваше имя" required>
+            </div>
+
+
+
+            <div class="form-group">
+                <label for="password">Пароль</label>
+                <input type="password" id="password" name="password" placeholder="Придумайте пароль" required minlength="6">
+                <div class="password-hint">Минимум 6 символов</div>
+            </div>
+
+
+            <button type="submit" class="btn">Зарегистрироваться</button>
+
+        </form>
+    </div>
+
+
+    <script src = "script.js"></script>
+
+
+
+
 </body>
 </html>
