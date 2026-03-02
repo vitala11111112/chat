@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Войти</title>
+    <link rel="stylesheet" href="log.css">
+</head>
+<body>
+
+    <div class="container">
+
+        <h2>Войти аккаунт</h2>
+
+        <form id="registrationForm" method="post">
+
+
+            <div class="form-group">
+                <label for="name">Имя</label>
+                <input type="text" id="name" name="name" placeholder="Введите ваше имя" required>
+            </div>
+
+
+
+            <div class="form-group">
+                <label for="password">Пароль</label>
+                <input type="password" id="password" name="password" placeholder="Введите пароль" required minlength="6">
+                <div class="password-hint">Минимум 6 символов</div>
+            </div>
+
+
+            <button type="submit" class="btn">Войти</button>
+
+        </form>
+    </div>
+
+
+    <script src = "script_log.js"></script>
+</body>
+</html>

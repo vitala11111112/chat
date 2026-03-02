@@ -25,6 +25,13 @@ class Users():
             return cur.fetchall()
 
 
+    def find(self,name:str,password:str):
+        with sqlite3.connect(self.dbname) as con:
+            cur = con.cursor()
+            cur.execute("SELECT id FROM users WHERE name=? AND password=?", (name, password))
+            return cur.fetchall()
+
+
 
 
 

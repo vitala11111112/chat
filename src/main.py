@@ -10,7 +10,7 @@ Users_db = Users()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -26,12 +26,20 @@ async def root():
 
 @app.post("/users")
 async def register_user(user_data: UserRegistration):
-    print(f"Получены данные: имя={user_data.name}, пароль={user_data.password}")
+
     Users_db.insert(user_data.name,user_data.password)
     print(Users_db.read())
     
     return {"messege":"данные успешно"}
-    
+
+
+@app.post("/users_log")
+async def login_user(user_data: UserRegistration):
+
+    user_id=Users_db.find(user_data.name, user_data.password)
+    print(user_id)
+
+    return {"messege": "данные успешно"}
 
 
 if __name__ == "__main__":
