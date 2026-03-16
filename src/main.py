@@ -3,10 +3,13 @@ import uvicorn
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from db import Users
+import socketio
 
-
+sio = socketio.AsyncServer(async_mode="asgi")
 app = FastAPI()
 Users_db = Users()
+socket_app = socketio.ASGIApp(sio, other_asgi_app=app)
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -19,6 +22,19 @@ app.add_middleware(
 class UserRegistration(BaseModel):
       name:str
       password:str
+
+@sio.event
+async def connect(sid, environ):
+    print(f"Клиент подключился: {sid}")
+    await sio.emit("message", {"data": "Вы подключены"}, room=sid)
+
+@sio.on("chat_message")
+async def handle_chat_message(sid, data):
+    print(f"Сообщение чата от {sid}: {data}")
+    # Отправляем ответ конкретному клиенту
+    await sio.emit("chat_response", {"data": "Сообщение получено"}, room=sid)
+    # Если нужно отправить сообщение всем клиентам:
+    # await sio.emit("chat_response", {"data": "Новое сообщение"}, broadcast=True)
 
 @app.get("/")
 async def root():
