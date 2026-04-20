@@ -1,4 +1,4 @@
-const socket = io("localhosy:8080",{transports: ["websocket"]});
+const socket = io("localhosy:8081",{transports: ["websocket"]});
 socket.on('connect', ()=> {
     console.log("connected")
     socket.emit("char_message", "test")

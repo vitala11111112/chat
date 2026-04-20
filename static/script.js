@@ -11,7 +11,7 @@ document.getElementById('registrationForm').addEventListener('submit', async fun
             
             
             try {
-                const response = await fetch('http://127.0.0.1:8080/users', {
+                const response = await fetch('http://127.0.0.1:8081/users', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

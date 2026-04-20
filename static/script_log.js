@@ -11,13 +11,17 @@ document.getElementById('registrationForm').addEventListener('submit', async fun
 
 
             try {
-                const response = await fetch('http://127.0.0.1:8080/users_log', {
+                const response = await fetch('http://127.0.0.1:8081/users_log', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(formData)
                 });
+                const result = response.json();
+                if (result.real_acc === true) {
+                    window.location.href = "chat.html";
+                }
 
 
             }

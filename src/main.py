@@ -2,31 +2,35 @@ from fastapi import FastAPI
 import uvicorn
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
-from db import Users
+from src.db import Users
 import socketio
+from fastapi.staticfiles import StaticFiles
 
 sio = socketio.AsyncServer(async_mode="asgi")
 app = FastAPI()
 Users_db = Users()
 socket_app = socketio.ASGIApp(sio, other_asgi_app=app)
+app.mount("/", StaticFiles(directory="static"), name="static")
 
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_origins=["*"],
+#     allow_credentials=True,
+#     allow_methods=["*"],
+#     allow_headers=["*"],
+# )
 
 class UserRegistration(BaseModel):
-      name:str
-      password:str
+    name: str
+    password: str
+
 
 @sio.event
 async def connect(sid, environ):
     print(f"Клиент подключился: {sid}")
     await sio.emit("message", {"data": "Вы подключены"}, room=sid)
+
 
 @sio.on("chat_message")
 async def handle_chat_message(sid, data):
@@ -36,26 +40,26 @@ async def handle_chat_message(sid, data):
     # Если нужно отправить сообщение всем клиентам:
     # await sio.emit("chat_response", {"data": "Новое сообщение"}, broadcast=True)
 
+
 @app.get("/")
 async def root():
-	return {"message": "Hello World"}
+    return {"message": "Hello World"}
+
 
 @app.post("/users")
 async def register_user(user_data: UserRegistration):
-
-    Users_db.insert(user_data.name,user_data.password)
+    Users_db.insert(user_data.name, user_data.password)
     print(Users_db.read())
-    
-    return {"messege":"данные успешно"}
+
+    return {"messege": "данные успешно"}
 
 
 @app.post("/users_log")
 async def login_user(user_data: UserRegistration):
-
-    user_id=Users_db.find(user_data.name, user_data.password)
+    user_id = Users_db.find(user_data.name, user_data.password)
     print(user_id)
 
-    return {"messege": "данные успешно"}
+    return {"real_acc": True}
 
 
 if __name__ == "__main__":
