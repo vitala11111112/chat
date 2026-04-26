@@ -6,39 +6,39 @@ from src.db import Users
 import socketio
 from fastapi.staticfiles import StaticFiles
 
-sio = socketio.AsyncServer(async_mode="asgi")
+# sio = socketio.AsyncServer(async_mode="asgi")
 app = FastAPI()
 Users_db = Users()
-socket_app = socketio.ASGIApp(sio, other_asgi_app=app)
-app.mount("/", StaticFiles(directory="static"), name="static")
+# socket_app = socketio.ASGIApp(sio, other_asgi_app=app)
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
-# app.add_middleware(
-#     CORSMiddleware,
-#     allow_origins=["*"],
-#     allow_credentials=True,
-#     allow_methods=["*"],
-#     allow_headers=["*"],
-# )
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class UserRegistration(BaseModel):
     name: str
     password: str
 
 
-@sio.event
-async def connect(sid, environ):
-    print(f"Клиент подключился: {sid}")
-    await sio.emit("message", {"data": "Вы подключены"}, room=sid)
+# @sio.event
+# async def connect(sid, environ):
+#     print(f"Клиент подключился: {sid}")
+#     await sio.emit("message", {"data": "Вы подключены"}, room=sid)
 
 
-@sio.on("chat_message")
-async def handle_chat_message(sid, data):
-    print(f"Сообщение чата от {sid}: {data}")
-    # Отправляем ответ конкретному клиенту
-    await sio.emit("chat_response", {"data": "Сообщение получено"}, room=sid)
-    # Если нужно отправить сообщение всем клиентам:
-    # await sio.emit("chat_response", {"data": "Новое сообщение"}, broadcast=True)
+# @sio.on("chat_message")
+# async def handle_chat_message(sid, data):
+#     print(f"Сообщение чата от {sid}: {data}")
+#     # Отправляем ответ конкретному клиенту
+#     await sio.emit("chat_response", {"data": "Сообщение получено"}, room=sid)
+#     # Если нужно отправить сообщение всем клиентам:
+#     # await sio.emit("chat_response", {"data": "Новое сообщение"}, broadcast=True)
 
 
 @app.get("/")
@@ -59,7 +59,7 @@ async def login_user(user_data: UserRegistration):
     user_id = Users_db.find(user_data.name, user_data.password)
     print(user_id)
 
-    return {"real_acc": True}
+    return {"real_acc": user_id}
 
 
 if __name__ == "__main__":

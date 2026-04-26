@@ -18,12 +18,11 @@ document.getElementById('registrationForm').addEventListener('submit', async fun
                     },
                     body: JSON.stringify(formData)
                 });
-                const result = response.json();
-                if (result.real_acc === true) {
-                    window.location.href = "chat.html";
-                }
-
-
+                const result = await response.json();
+                console.log('Ответ сервера:', result);
+                if (result.real_acc) {
+                    window.location.href = "/static/chat.html";
+                } 
             }
             catch (error) {
                 console.error('Ошибка сети или запроса:', error);
