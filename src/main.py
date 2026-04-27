@@ -6,10 +6,10 @@ from src.db import Users
 import socketio
 from fastapi.staticfiles import StaticFiles
 
-# sio = socketio.AsyncServer(async_mode="asgi")
+sio = socketio.AsyncServer(async_mode="asgi", cors_allowed_origins="*")
 app = FastAPI()
 Users_db = Users()
-# socket_app = socketio.ASGIApp(sio, other_asgi_app=app)
+socket_app = socketio.ASGIApp(sio, other_asgi_app=app)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
@@ -26,19 +26,23 @@ class UserRegistration(BaseModel):
     password: str
 
 
-# @sio.event
-# async def connect(sid, environ):
-#     print(f"Клиент подключился: {sid}")
-#     await sio.emit("message", {"data": "Вы подключены"}, room=sid)
+@sio.event
+async def connect(sid, environ):
+    print(f"Клиент подключился: {sid}")
 
 
-# @sio.on("chat_message")
-# async def handle_chat_message(sid, data):
-#     print(f"Сообщение чата от {sid}: {data}")
-#     # Отправляем ответ конкретному клиенту
-#     await sio.emit("chat_response", {"data": "Сообщение получено"}, room=sid)
-#     # Если нужно отправить сообщение всем клиентам:
-#     # await sio.emit("chat_response", {"data": "Новое сообщение"}, broadcast=True)
+@sio.event
+async def disconnect(sid, environ):
+    print(f"Клиент подключился: {sid}")
+
+
+
+@sio.on("chat_message")
+async def handle_chat_message(sid, data):
+    print(f"Сообщение чата от {sid}: {data}")
+
+    # Если нужно отправить сообщение всем клиентам:
+    await sio.emit("chat_message", data)
 
 
 @app.get("/")
@@ -63,4 +67,4 @@ async def login_user(user_data: UserRegistration):
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8080)
+    uvicorn.run(socket_app, host="127.0.0.1", port=8081)
